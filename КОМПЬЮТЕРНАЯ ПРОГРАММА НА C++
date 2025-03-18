@@ -1,0 +1,151 @@
+# Assignment-No.-1---Lab-1-Working-with-lists-Programming-Technology-
+Assignment No. 1 - Lab 1 "Working with lists" (Programming Technology)
+
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string name;
+    int number;
+    double value;
+    Node* next;
+};
+
+// Добавление элемента в начало списка
+void addToStart(Node** head, string name, int num, double val) {
+    Node* newNode = new Node;
+    newNode->name = name;
+    newNode->number = num;
+    newNode->value = val;
+    newNode->next = *head;
+    *head = newNode;
+}
+
+// Добавление элемента в конец списка
+void addToEnd(Node** head, string name, int num, double val) {
+    Node* newNode = new Node;
+    newNode->name = name;
+    newNode->number = num;
+    newNode->value = val;
+    newNode->next = nullptr;
+
+    if (*head == nullptr) {
+        *head = newNode;
+        return;
+    }
+
+    Node* temp = *head;
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+
+// Добавление элемента после заданного элемента
+void insertAfter(Node* prevNode, string name, int num, double val) {
+    if (prevNode == nullptr) {
+        cout << "Previous node cannot be null" << endl;
+        return;
+    }
+    Node* newNode = new Node;
+    newNode->name = name;
+    newNode->number = num;
+    newNode->value = val;
+    newNode->next = prevNode->next;
+    prevNode->next = newNode;
+}
+
+// Добавление элемента перед заданным элементом
+void insertBefore(Node** head, Node* nextNode, string name, int num, double val) {
+    if (nextNode == nullptr) {
+        cout << "Next node cannot be null" << endl;
+        return;
+    }
+
+    Node* newNode = new Node;
+    newNode->name = name;
+    newNode->number = num;
+    newNode->value = val;
+
+    if (*head == nextNode) {
+        newNode->next = *head;
+        *head = newNode;
+        return;
+    }
+
+    Node* temp = *head;
+    while (temp->next != nextNode && temp->next != nullptr) {
+        temp = temp->next;
+    }
+
+    if (temp->next == nextNode) {
+        newNode->next = nextNode;
+        temp->next = newNode;
+    }
+}
+
+// Удаление элемента по имени
+void deleteNode(Node** head, string key) {
+    Node* temp = *head;
+    Node* prev = nullptr;
+
+    if (temp != nullptr && temp->name == key) {
+        *head = temp->next;
+        delete temp;
+        return;
+    }
+
+    while (temp != nullptr && temp->name != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == nullptr) {
+        cout << "Element not found" << endl;
+        return;
+    }
+
+    prev->next = temp->next;
+    delete temp;
+}
+
+// Вывод списка
+void printList(Node* node) {
+    if (node == nullptr) {
+        cout << "List is empty" << endl;
+        return;
+    }
+    while (node != nullptr) {
+        cout << "Name: " << node->name << ", Number: " << node->number << ", Value: " << node->value << endl;
+        node = node->next;
+    }
+}
+
+int main() {
+    Node* head = nullptr;
+
+    // Добавление элементов
+    addToEnd(&head, "First", 1, 1.1);
+    addToStart(&head, "Second", 2, 2.2);
+    addToEnd(&head, "Third", 3, 3.3);
+
+    // Вставка после первого элемента
+    insertAfter(head, "Fourth", 4, 4.4);
+
+    // Вставка перед вторым элементом
+    insertBefore(&head, head->next, "Fifth", 5, 5.5);
+
+    cout << "Initial list:" << endl;
+    printList(head);
+
+    // Удаление элемента
+    deleteNode(&head, "Second");
+
+    cout << "\nList after deletion:" << endl;
+    printList(head);
+
+    return 0;
+}
